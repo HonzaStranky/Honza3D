@@ -1,1 +1,1616 @@
-a
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honza3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 107, 107, 0.24), transparent 30%),
+                radial-gradient(circle at top right, rgba(93, 176, 255, 0.22), transparent 28%),
+                linear-gradient(135deg, #07111f 0%, #152a4a 45%, #6b3fa0 100%);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255,255,255,0.08), transparent 35%, rgba(255,255,255,0.04));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(6, 11, 22, 0.45);
+            backdrop-filter: blur(16px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.13);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            background: linear-gradient(45deg, #ffffff, #ffe4c4 60%, #ffd166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 18px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Mobile menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            color: #ff6b6b;
+            padding-left: 20px;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            min-height: 680px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 100px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.16), transparent 24%),
+                radial-gradient(circle at 80% 10%, rgba(255, 209, 102, 0.16), transparent 24%),
+                linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0 38%, rgba(7, 17, 31, 0.24) 100%);
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .hero-content {
+            z-index: 2;
+            position: relative;
+            padding: 42px 48px;
+            max-width: 760px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 28px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.24);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            margin-bottom: 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255,255,255,0.16);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: #fff7d6;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            margin-bottom: 18px;
+            background: linear-gradient(45deg, #ffffff, #fce7c4 60%, #ffd166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInUp 1s ease-out;
+            line-height: 1.08;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.35rem);
+            margin-bottom: 30px;
+            opacity: 0.95;
+            animation: slideInUp 1s ease-out 0.3s both;
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.3);
+            animation: slideInUp 1s ease-out 0.6s both;
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 45px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Products Section */
+        .products {
+            padding: clamp(50px, 10vw, 100px) 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 6vw, 3rem);
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, #ffffff, #ffe5b8 60%, #ffd166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.02em;
+        }
+
+        .product-filters {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            min-width: 220px;
+        }
+
+        .filter-select option {
+            background: #2c2c2c;
+            color: #fff;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(20px, 4vw, 30px);
+            margin-top: 50px;
+        }
+
+        .product-item {
+            position: relative;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            overflow: hidden;
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: translateY(50px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 16px 42px rgba(2, 6, 23, 0.24);
+        }
+
+        .product-item.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-item:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+            border-color: rgba(255, 209, 102, 0.55);
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.35s ease;
+        }
+
+        .product-item:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent 35%, rgba(7,17,31,0.22));
+            pointer-events: none;
+        }
+
+        .product-image::before {
+            content: '';
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+
+        .product-image-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.22);
+        }
+
+        .product-info {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .product-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 214, 0, 0.18);
+            color: #ffd966;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+
+        .product-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .order-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+            box-shadow: 0 10px 24px rgba(255, 107, 107, 0.22);
+        }
+
+        .order-button:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 14px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Services Section */
+        .services {
+            padding: clamp(50px, 10vw, 100px) 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(20px, 4vw, 40px);
+            margin-top: 50px;
+        }
+
+        .service-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 40px 25px;
+            border-radius: 22px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 16px 38px rgba(2, 6, 23, 0.18);
+        }
+
+        .service-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 209, 102, 0.18);
+            color: #ffd966;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 209, 102, 0.35);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .service-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: clamp(50px, 10vw, 100px) 0;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .faq-list {
+            display: grid;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #fff;
+            text-align: left;
+            padding: 18px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .faq-question span:last-child {
+            font-size: 1.2rem;
+            color: #ffd166;
+            transition: transform 0.2s ease;
+        }
+
+        .faq-item.active .faq-question span:last-child {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease;
+            padding: 0 22px;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.7;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 220px;
+            padding: 0 22px 18px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: clamp(50px, 10vw, 100px) 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .contact-info h3 {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .contact-details {
+            margin-top: 40px;
+        }
+
+        .contact-details p {
+            margin-bottom: 15px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 40px;
+            border-radius: 24px;
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 48px rgba(2, 6, 23, 0.23);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group select option {
+            background: #333;
+            color: #fff;
+        }
+
+        .form-group.required label::after {
+            content: ' *';
+            color: #ff6b6b;
+        }
+
+        .form-group.error input,
+        .form-group.error textarea,
+        .form-group.error select {
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.25);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 14px 35px rgba(255, 107, 107, 0.33);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+        }
+
+        .submit-btn.loading::after {
+            opacity: 1;
+        }
+
+        .submit-btn.loading {
+            color: transparent;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Success message */
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(6, 11, 23, 0.45);
+            padding: 40px 0;
+            text-align: center;
+            backdrop-filter: blur(14px);
+            border-top: 1px solid rgba(255,255,255,0.12);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a img {
+            width: 24px;
+            height: 24px;
+            display: block;
+            filter: invert(1);
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 107, 107, 0.2);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.18);
+        }
+
+        .social-links a[href^="mailto:"] img {
+            filter: none;
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .contact-form {
+                padding: 25px;
+            }
+
+            .product-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero {
+                min-height: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .service-card,
+            .contact-form {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+        }
+
+        /* Loading animation for products */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-item.animate {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .no-products {
+            grid-column: 1 / -1;
+            padding: 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px dashed rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Honza3D</div>
+            <ul class="nav-links">
+                <li><a href="#home">Domů</a></li>
+                <li><a href="#products">Produkty</a></li>
+                <li><a href="#services">Služby</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+                <li><a href="ourteam.html">Náš Team</a></li>
+                <li><a href="reviews.html">Recenze</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <div class="mobile-menu" id="mobileMenu">
+                <a href="#home" onclick="closeMobileMenu()">Domů</a>
+                <a href="#products" onclick="closeMobileMenu()">Produkty</a>
+                <a href="#services" onclick="closeMobileMenu()">Služby</a>
+                <a href="#contact" onclick="closeMobileMenu()">Kontakt</a>
+                <a href="ourteam.html" onclick="closeMobileMenu()">Náš Team</a>
+                <a href="reviews.html" onclick="closeMobileMenu()">Recenze</a>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Přesné 3D modely • rychlý tisk • osobní přístup</div>
+            <h1>Úžasné 3D Modely</h1>
+            <p>Přivedeme vaši představivost k životu s precizností a levnou cenou.</p>
+            <a href="#products" class="cta-button">Zobrazit Produkty</a>
+        </div>
+    </section>
+
+    <section id="products" class="products">
+        <div class="container">
+            <h2 class="section-title">Naše Produkty</h2>
+            <div class="product-filters">
+                <label class="filter-label" for="categoryFilter">
+                    Kategorie:
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="all">Všechny kategorie</option>
+                    </select>
+                </label>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Naše Služby</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <span class="service-icon">🎯</span>
+                    <h3 class="service-title">Vlastní 3D Modelování</h3>
+                    <p class="service-description">Přizpůsobené 3D modely navržené podle vašich specifických požadavků a představ.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🖨️</span>
+                    <h3 class="service-title">3D Tisk</h3>
+                    <p class="service-description">Profesionální služby 3D tisku s vysokou kvalitou a přesností pro všechny typy projektů.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🎨</span>
+                    <h3 class="service-title">Design a Konzultace</h3>
+                    <p class="service-description">Pomoc s designem a konzultace ohledně nejlepších řešení pro vaše projekty.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">⚡</span>
+                    <h3 class="service-title">Rychlé Prototypy</h3>
+                    <p class="service-description">Rychlé vytváření prototypů pro testování a vývoj vašich nápadů.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🔧</span>
+                    <h3 class="service-title">Opravy a Úpravy</h3>
+                    <p class="service-description">Opravy stávajících modelů a úpravy podle vašich potřeb.</p>
+                </div>
+                <div class="service-card service-card-future">
+                    <span class="service-badge">V Budoucnosti</span>
+                    <span class="service-icon">📦</span>
+                    <h3 class="service-title">Balení a Doprava</h3>
+                    <p class="service-description">Bezpečné balení a rychlá doprava všech objednaných produktů.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="choose-us">
+        <div class="container">
+            <h2 class="section-title">Proč si vybrat nás</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <span class="service-icon">💎</span>
+                    <h3 class="service-title">Skvělý poměr cena/kvalita</h3>
+                    <p class="service-description">Nabízíme kvalitní 3D tisk za ceny, které jsou dostupné pro jednotlivce i malé firmy.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">⚡</span>
+                    <h3 class="service-title">Rychlé dodání</h3>
+                    <p class="service-description">Dokážeme vyrobit většinu zakázek rychle a doručit je včas podle dohody.</p>
+                </div>
+                <div class="service-card">
+                    <span class="service-icon">🤝</span>
+                    <h3 class="service-title">Osobní přístup</h3>
+                    <p class="service-description">Každý projekt konzultujeme individuálně, aby výsledek odpovídal vašim potřebám.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Často Kladené Otázky</h2>
+            <div class="faq-list">
+                <div class="faq-item active">
+                    <button class="faq-question" type="button">
+                        <span>Proč jsou ceny tak nízké?</span>
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Protože chci, aby byl 3D tisk dostupný pro každého. Ceny držím na minimu – spousta našich modelů stojí méně než jedno malé menu ve fastfoodu.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Jak to funguje?</span>
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        1. Vyberte model nebo nám pošlete svůj nápad.
+                        <br>2. Domluvíme detaily, materiál a cenu.
+                        <br>3. Vytiskneme a odešleme vaši objednávku.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Jak dlouho trvá vyřízení objednávky?</span>
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Obvykle zkontrolujeme a odpovíme do několika hodin, podle náročnosti požadavku a aktuální zátěže.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Mohu si nechat upravit rozměr nebo design?</span>
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Ano. Případně můžeme připravit variantu podle vašich požadavků, velikosti nebo stylu.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Je možné objednat i vlastní model?</span>
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Rozhodně. Stačí nám poslat svůj nápad nebo referenci a domluvíme se na podobě modelu.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span>Jak budu vědět, že byla objednávka přijata?</span>
+                        <span>+</span>
+                    </button>
+                    <div class="faq-answer">
+                        Po odeslání formuláře vám potvrdíme přijetí a budeme vás dále informovat přes vybraný kontakt.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Kontaktujte Nás</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Vytvořme Něco Úžasného</h3>
+                    <p>
+                        Jste připraveni přivést svou vizi k životu? Ať už se jedná o složitý architektonický model, 
+                        prototyp produktu nebo kreativní design postavy, jsme tu, abychom vám pomohli 
+                        dosáhnout úžasných výsledků.
+                    </p>
+                    <div class="contact-details">
+                        <p><strong>📧 Email:</strong> Honza-3D@email.cz</p>
+                        <p><strong>📞 Telefon:</strong> Obraťte se na Whatsapp</p>
+
+                        <p style="color: #fff7d6; font-weight: 600; background: linear-gradient(90deg, rgba(255, 209, 102, 0.18), rgba(255, 107, 107, 0.12)); padding: 12px 14px; border-left: 4px solid #ffd166; border-radius: 10px; margin-top: 15px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); line-height: 1.5;">
+                            ✨ Objednávkový formulář vám pošle požadavek přímo k vyřízení a pro rychlé doplnění detailů můžete použít WhatsApp.
+                        </p>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="success-message" id="successMessage">
+                        ✅ Děkujeme! Vaše objednávka byla úspěšně odeslána. Brzy vás kontaktujeme.
+                    </div>
+
+                    <div style="margin-bottom: 18px; padding: 12px 14px; border: 1px solid rgba(255, 107, 107, 0.35); background: rgba(255, 107, 107, 0.12); border-radius: 10px; color: #ffe0e0; font-size: 0.95rem; line-height: 1.5;">
+                        ⚠️ Prosím, používejte tento formulář pouze pokud chcete skutečně objednat. Nezasílejte spam ani zkoušky — takové zprávy budou ignorovány.
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="name">Jméno</label>
+                        <input type="text" id="name" name="name" placeholder="Vaše jméno" required>
+                        <div class="error-message">Prosím zadejte vaše jméno</div>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="vas@email.cz" required>
+                        <div class="error-message">Prosím zadejte platný email</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="whatsapp">WhatsApp / Telefon</label>
+                        <input type="tel" id="whatsapp" name="whatsapp" placeholder="+420 123 456 789">
+                        <div class="error-message">Prosím zadejte platné telefonní číslo</div>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="product">Vyberte produkt</label>
+                        <select id="product" name="product" required>
+                            <option value="">-- Vyberte produkt --</option>
+                        </select>
+                        <div class="error-message">Prosím vyberte produkt</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity">Počet kusů</label>
+                        <input type="number" id="quantity" name="quantity" placeholder="1" min="1" max="100" value="1">
+                        <div class="error-message">Prosím zadejte platný počet kusů (1-100)</div>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label for="message">Zpráva</label>
+                        <textarea id="message" name="message" rows="4" placeholder="Popište nám váš projekt, požadavky na barvu, velikost nebo jiné specifikace..." required></textarea>
+                        <div class="error-message">Prosím napište nám zprávu</div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">Odeslat Objednávku</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">Honza3D</div>
+                <p>&copy; 2026 Honza3D. Všechna práva vyhrazena.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/" title="Instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/instagram.svg" alt="Instagram logo">
+                    </a>
+                    <a href="https://www.facebook.com/" title="Facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/facebook.svg" alt="Facebook logo">
+                    </a>
+                    <a href="mailto:Honza-3D@email.cz" title="Email" aria-label="Email">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23ffffff'/%3E%3Ctext x='16' y='20' dominant-baseline='middle' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='18' font-weight='700' fill='%23ff7f00'%3EE%3C/text%3E%3C/svg%3E" alt="Email logo">
+                    </a>
+                    <a href="https://chat.whatsapp.com/BgV4ceDdH5DGxZhwLjeVdb" title="WhatsApp" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+                        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v12/icons/whatsapp.svg" alt="WhatsApp logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Products data
+        // Copy paste placeholder
+        // { name: '.', price: 1, description: '.' },
+        // { name: '.', price: 1, category: 'Figurky', description: '.' },
+            
+        const products = [
+            { name: 'Artikulovaný Drak', price: 199, badge: 'Bestseller', categories: ['Figurky', 'Bestseller', 'Artikulované'], image: 'https://media.printables.com/media/prints/835659/images/6438652_f56c516e-dbfe-454a-8395-1ee4a9f3e5f7_bf5f02d0-1c8b-450c-b40c-832f44c803b6/thumbs/inside/1280x960/jpg/dsc_0101.webp', description: 'Detailní 3D tištěný drak s ohebným kloubovým tělem. Perfektní antistresová hračka i fantasy dekorace z PLA plastu.' },
+            { name: 'Píšťalka', price: 5, categories: ['Dárky'], image: 'https://media.printables.com/media/prints/205725/images/1903105_98769f84-779d-45f4-aff6-0909bd8cc5eb/thumbs/inside/1280x960/jpg/20220512_153825.webp', description: 'Kapesní 3D píšťalka na klíče. Ideální for fun nebo na rychlé nalezení kámoše v lese.' },
+            { name: 'Artikulovaný Axolotl', price: 99, categories: ['Figurky', 'Artikulované'], image: 'https://media.printables.com/media/comment_images/37/5751f5-6d0e-4342-98f3-5004a1a79da0/thumbs/inside/640x480/jpg/1000013447.webp', description: 'Ohebný 3D tištěný axolotl s hýbacími klouby. Roztomilý vodní dráček jen tak for fun na stůl.' },
+            { name: '3DBenchy (Lodička)', price: 30, categories: ['Sběratelské'], image: 'https://i.pinimg.com/736x/83/ac/63/83ac63ca7c119dc5f31b6afad28bda67.jpg', description: 'Legendární testovací lodička pro 3D tiskárny a populární sběratelská dekorace.' },
+            { name: 'Porshe 911 RSR', price: 99, categories: ['Sběratelské', 'Auta'], image: 'https://makerworld.bblmw.com/makerworld/model/US83af276ceecaf8/design/2025-08-23_70e20f912190d8.png?x-oss-process=image/resize,w_1000/format,webp', description: 'Nakrájený model auta Porshe 911 RSR pro sběratelství a kolekce.' },
+            { name: 'Tiny Twisty Ball', price: 20, categories: ['Hračky', 'Antistresové'], image: 'https://makerworld.bblmw.com/makerworld/model/USe802fc2ef26095/design/027b7f8298aaf73b.jpg?x-oss-process=image/resize,w_1000/format,webp', description: '3D tištěná fidget antistress hračka pro uvolnění stresu a zábavu. Ideální na stůl nebo do kapsy.' },
+            { name: 'V8 Model', price: 15, categories: ['Sběratelské', 'Auta'], image: 'https://media.printables.com/media/prints/1027191/images/7797691_e4f09969-ad9c-413d-af87-4e46e780e2a0_d84f65f5-7fb0-458e-b9e0-77b3faa90fb9/thumbs/inside/1280x960/jpg/img_7273.webp', description: 'Miniaturní model motoru V8 pro sběratelství. malý doplněk na klíče.' }
+        ];
+
+        const productsGrid = document.getElementById('productsGrid');
+        const productSelect = document.getElementById('product');
+        const categoryFilter = document.getElementById('categoryFilter');
+
+        function formatPrice(price) {
+            return `${price},-`;
+        }
+
+        function getProductCategories(product) {
+            if (Array.isArray(product.categories)) {
+                return product.categories.length ? product.categories : ['Jiné'];
+            }
+            if (product.category) {
+                return [product.category];
+            }
+            return ['Jiné'];
+        }
+
+        function getUniqueCategories() {
+            return [...new Set(products.flatMap(product => getProductCategories(product)))];
+        }
+
+        function updateCategoryFilter() {
+            if (!categoryFilter) return;
+            const categories = getUniqueCategories();
+            categoryFilter.innerHTML = '<option value="all">Všechny kategorie</option>' +
+                categories.map(category => `<option value="${category}">${category}</option>`).join('');
+            categoryFilter.value = 'all';
+        }
+
+        function renderProducts(list = products) {
+            if (!productsGrid || !productSelect) return;
+
+            productsGrid.innerHTML = '';
+            productSelect.innerHTML = '<option value="">-- Vyberte produkt --</option>';
+
+            if (list.length === 0) {
+                productsGrid.innerHTML = '<div class="no-products">Žádné produkty v této kategorii. Zkuste jinou kategorii nebo se vraťte na všechny produkty.</div>';
+                return;
+            }
+
+            list.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'product-item';
+                item.dataset.product = product.name;
+                item.dataset.price = product.price;
+                const hasImage = Boolean(product.image && product.image.trim());
+                item.innerHTML = `
+                    <div class="product-image" style="${hasImage ? `background-image: url('${product.image}'); background-size: cover; background-position: center;` : ''}">
+                        ${hasImage ? '' : '<div class="product-image-placeholder">Obrázek ještě není dostupný :C</div>'}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">
+                            <span>${product.name}</span>
+                            <span class="product-price">${formatPrice(product.price)}</span>
+                        </div>
+                        ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+                        <p class="product-description">${product.description || ''}</p>
+                        <button type="button" class="order-button">Objednat</button>
+                    </div>
+                `;
+
+                productsGrid.appendChild(item);
+                item.classList.add('animate');
+
+                const option = document.createElement('option');
+                option.value = `${product.name} - ${product.price} Kč`;
+                option.textContent = `${product.name} - ${formatPrice(product.price)}`;
+                productSelect.appendChild(option);
+            });
+
+            const customOption = document.createElement('option');
+            customOption.value = 'Vlastní model';
+            customOption.textContent = 'Vlastní model (konzultace zdarma)';
+            productSelect.appendChild(customOption);
+        }
+
+        function getFilteredProducts() {
+            if (!categoryFilter || categoryFilter.value === 'all') {
+                return products;
+            }
+            return products.filter(product => getProductCategories(product).includes(categoryFilter.value));
+        }
+
+        function applyFilters() {
+            renderProducts(getFilteredProducts());
+        }
+
+        updateCategoryFilter();
+        applyFilters();
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.remove('active');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.closest('.faq-item');
+                const isActive = item.classList.contains('active');
+
+                document.querySelectorAll('.faq-item').forEach(faqItem => {
+                    faqItem.classList.remove('active');
+                });
+
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Order button functionality using event delegation
+        if (productsGrid) {
+            productsGrid.addEventListener('click', function(event) {
+                const button = event.target.closest('.order-button');
+                if (!button) return;
+
+                const productItem = button.closest('.product-item');
+                const productName = productItem.dataset.product;
+                const productPrice = productItem.dataset.price;
+
+                document.querySelector('#contact').scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                setTimeout(() => {
+                    const productSelectField = document.querySelector('#product');
+                    if (productSelectField) {
+                        productSelectField.value = `${productName} - ${productPrice} Kč`;
+                        productSelectField.style.background = 'rgba(255, 107, 107, 0.2)';
+                        setTimeout(() => {
+                            productSelectField.style.background = '';
+                        }, 1000);
+                    }
+                }, 1000);
+            });
+        }
+
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', applyFilters);
+        }
+
+        // Form validation
+        function validateField(field) {
+            const value = field.value.trim();
+            const fieldGroup = field.closest('.form-group');
+            const errorMessage = fieldGroup.querySelector('.error-message');
+            
+            let isValid = true;
+            let message = '';
+
+            if (field.hasAttribute('required') && !value) {
+                isValid = false;
+                message = `Prosím vyplňte pole ${field.previousElementSibling.textContent.replace(' *', '')}`;
+            } else if (field.type === 'email' && value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    isValid = false;
+                    message = 'Prosím zadejte platný email';
+                }
+            } else if (field.type === 'tel' && value) {
+                const phoneRegex = /^[\+]?[0-9\s\-\(\)]{9,}$/;
+                if (!phoneRegex.test(value)) {
+                    isValid = false;
+                    message = 'Prosím zadejte platné telefonní číslo';
+                }
+            } else if (field.type === 'number' && value) {
+                const num = parseInt(value);
+                if (num < 1 || num > 100) {
+                    isValid = false;
+                    message = 'Počet kusů musí být mezi 1 a 100';
+                }
+            }
+
+            if (isValid) {
+                fieldGroup.classList.remove('error');
+                errorMessage.style.display = 'none';
+            } else {
+                fieldGroup.classList.add('error');
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+
+            return isValid;
+        }
+
+        // Add real-time validation
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('blur', () => validateField(field));
+            field.addEventListener('input', () => {
+                if (field.closest('.form-group').classList.contains('error')) {
+                    validateField(field);
+                }
+            });
+        });
+
+        function buildOrderDiscordMessage(data) {
+            return [
+                '### Nová objednávka z webu Honza3D!',
+                '',
+                `**Zákazník:** ${data.name || '-'}`,
+                '',
+                `**Email:** ${data.email || '-'}`,
+                '',
+                `**Whatsapp:** ${data.whatsapp || '-'}`,
+                '',
+                `**Produkt:** ${data.product || '-'}`,
+                '',
+                `**Počet kusů:** ${data.quantity || '1'}`,
+                '',
+                '**Zpráva / Specifikace:**',
+                '',
+                `${data.message || '-'}`,
+                '',
+                '*Odesláno z webového formuláře.*'
+            ].join('\n');
+        }
+
+        function createMailtoLink(data) {
+            const subject = encodeURIComponent(`Nová objednávka z webu Honza3D - ${data.product || 'bez produktu'}`);
+            const body = encodeURIComponent(buildOrderDiscordMessage(data));
+            return `mailto:honza-3d@email.cz?subject=${subject}&body=${body}`;
+        }
+
+        async function sendOrderToDiscord(data) {
+            const discordMessage = buildOrderDiscordMessage(data);
+            const webhookUrl = 'https://discord.com/api/webhooks/1522186585091604610/8f6SgE_qY-r4TlK6Pl7UTOdBB8ammnQcAwcG2JXtvmjLOBUWhp6TZz8AUlI5A_SlslPV';
+
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: discordMessage
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Discord webhook failed with status ${response.status}`);
+            }
+        }
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate all fields
+            const fields = this.querySelectorAll('input, select, textarea');
+            let isFormValid = true;
+            
+            fields.forEach(field => {
+                if (!validateField(field)) {
+                    isFormValid = false;
+                }
+            });
+
+            if (!isFormValid) {
+                const firstError = this.querySelector('.form-group.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            const successMessage = document.getElementById('successMessage');
+
+            try {
+                await sendOrderToDiscord(data);
+
+                successMessage.innerHTML = '✅ Děkujeme! Vaše objednávka byla úspěšně odeslána do Discordu. Brzy vás kontaktujeme.';
+                successMessage.style.display = 'block';
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                this.reset();
+                this.querySelectorAll('.form-group.error').forEach(group => {
+                    group.classList.remove('error');
+                    group.querySelector('.error-message').style.display = 'none';
+                });
+            } catch (error) {
+                console.error('Form submission error:', error);
+                successMessage.innerHTML = '✅ Děkujeme! Zkusili jsme odeslat objednávku do Discordu. Pokud to nefungovalo, otevřeli jsme vám připravený e-mail.';
+                successMessage.style.display = 'block';
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (typeof window !== 'undefined') {
+                    window.location.href = createMailtoLink(data);
+                }
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+
+        // Add scroll effect to header
+        let lastScrollY = window.scrollY;
+        
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 100) {
+                header.style.background = 'rgba(0, 0, 0, 0.4)';
+                header.style.padding = '10px 0';
+            } else {
+                header.style.background = 'rgba(0, 0, 0, 0.2)';
+                header.style.padding = '15px 0';
+            }
+
+            // Hide header on scroll down, show on scroll up
+            if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, index * 100); // Stagger animation
+                }
+            });
+        }, observerOptions);
+
+        // Observe product items and service cards
+        document.querySelectorAll('.product-item, .service-card').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nav = document.querySelector('nav');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (!nav.contains(e.target) && mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Close mobile menu on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+
+        // Initialize quantity field
+        document.getElementById('quantity').addEventListener('change', function() {
+            if (!this.value || this.value < 1) {
+                this.value = 1;
+            } else if (this.value > 100) {
+                this.value = 100;
+            }
+        });
+
+        // Keyboard navigation for accessibility
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+
+        // Preload important resources and optimize performance
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading class to products for stagger animation
+            const products = document.querySelectorAll('.product-item');
+            products.forEach((product, index) => {
+                product.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>
