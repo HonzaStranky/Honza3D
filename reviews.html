@@ -357,7 +357,7 @@
                     <textarea id="reviewText" name="reviewText" rows="5" placeholder="Napište svůj názor..." required></textarea>
                 </div>
                 <button type="submit">Odeslat recenzi</button>
-                <div class="success-message" id="reviewSuccess">Děkujeme! Vaše recenze byla přidána.</div>
+                <div class="success-message" id="reviewSuccess">Děkujeme! Vaše recenze byla odeslána k posouzení. Po schválení se objeví na webu.</div>
             </form>
         </section>
 
@@ -373,6 +373,7 @@
         const reviewsGrid = document.getElementById('reviewsGrid');
         const reviewSuccess = document.getElementById('reviewSuccess');
         const apiUrl = 'https://6a46aa4ea268c8be2ce83b9a.mockapi.io/reviews';
+        const webhookUrl = 'https://discord.com/api/webhooks/1522186585091604610/8f6SgE_qY-r4TlK6Pl7UTOdBB8ammnQcAwcG2JXtvmjLOBUWhp6TZz8AUlI5A_SlslPV';
 
         function renderReviews(reviews) {
             if (!reviews.length) {
@@ -410,17 +411,34 @@
             }
         }
 
+        function buildReviewDiscordMessage(review) {
+            return [
+                '### Nová recenze z webu Honza3D!',
+                '',
+                `**Jméno:** ${review.name || '-'}`,
+                '',
+                `**Hodnocení:** ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}`,
+                '',
+                '**Recenze:**',
+                '',
+                `${review.text || '-'}`,
+                '',
+                '*Odesláno z webového formuláře recenzí.*'
+            ].join('\n');
+        }
+
         async function submitReview(review) {
-            const response = await fetch(apiUrl, {
+            const discordMessage = buildReviewDiscordMessage(review);
+            const response = await fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(review)
+                body: JSON.stringify({ content: discordMessage })
             });
 
             if (!response.ok) {
-                throw new Error('Nepodařilo se odeslat recenzi');
+                throw new Error(`Discord webhook failed with status ${response.status}`);
             }
 
             return response.json();
@@ -448,7 +466,6 @@
                 await submitReview(review);
                 reviewForm.reset();
                 reviewSuccess.style.display = 'block';
-                loadReviews();
                 setTimeout(() => {
                     reviewSuccess.style.display = 'none';
                 }, 3000);
