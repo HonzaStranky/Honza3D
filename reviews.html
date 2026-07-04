@@ -74,11 +74,25 @@
             font-size: clamp(1.5rem, 4vw, 2rem);
             font-weight: 800;
             letter-spacing: 0.04em;
-            background: linear-gradient(45deg, #ffffff, #ffe4c4 60%, #ffd166);
+            display: inline;
+            text-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+        .logo span {
+            display: inline;
+            color: transparent;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+        .logo .honza {
+            background: linear-gradient(45deg, #1881e8, #5ab2ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+        .logo .three-d {
+            background: linear-gradient(45deg, #ff7600, #ffb24c);
+            background-clip: text;
+            -webkit-background-clip: text;
         }
 
         .nav-links {
@@ -300,7 +314,7 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo">Honza3D</div>
+            <div class="logo"><span class="honza">Honza</span><span class="three-d">3D</span></div>
             <ul class="nav-links">
                 <li><a href="index.html">Domů</a></li>
                 <li><a href="index.html#products">Produkty</a></li>
