@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recenze - Honza3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(255, 107, 107, 0.24), transparent 30%),
+                radial-gradient(circle at top right, rgba(93, 176, 255, 0.22), transparent 28%),
+                linear-gradient(135deg, #07111f 0%, #152a4a 45%, #6b3fa0 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding-top: 100px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255,255,255,0.08), transparent 35%, rgba(255,255,255,0.04));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: rgba(6, 11, 22, 0.45);
+            backdrop-filter: blur(16px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.13);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            display: inline;
+            text-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+        .logo span {
+            display: inline;
+            color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo .honza {
+            background: linear-gradient(45deg, #1881e8, #5ab2ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+        .logo .three-d {
+            background: linear-gradient(45deg, #ff7600, #ffb24c);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .hero {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 40px 36px;
+            border-radius: 28px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.24);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 26%),
+                radial-gradient(circle at bottom right, rgba(255,209,102,0.12), transparent 26%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            line-height: 1.8;
+            opacity: 0.92;
+            max-width: 820px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reviews-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .review-card,
+        .review-form {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .review-form {
+            margin-bottom: 40px;
+        }
+
+        .review-card {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .review-meta {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .review-form h2 {
+            margin-bottom: 20px;
+            font-size: 1.9rem;
+        }
+
+        .form-row {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .form-row label {
+            font-weight: 600;
+        }
+
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-row input:focus,
+        .form-row select:focus,
+        .form-row textarea:focus {
+            outline: none;
+            border-color: #ffd966;
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .review-form button,
+        .admin-panel button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .review-form button:hover,
+        .admin-panel button:hover {
+            transform: translateY(-2px);
+        }
+
+        .admin-toggle {
+            margin: 24px 0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.14);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .admin-panel {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 40px;
+        }
+
+        .admin-panel.hidden {
+            display: none;
+        }
+
+        .admin-panel h2 {
+            margin-bottom: 18px;
+        }
+
+        .admin-note {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 18px;
+            background: rgba(76, 175, 80, 0.18);
+            color: #b8f2b8;
+            border: 1px solid rgba(76, 175, 80, 0.35);
+            border-radius: 14px;
+        }
+
+        .reviews-grid.empty::before {
+            content: 'Zatím žádné recenze. Buďte první!';
+            display: block;
+            padding: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            border: 1px dashed rgba(255, 255, 255, 0.18);
+        }
+
+        .review-author {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .review-rating {
+            color: #ffd966;
+            font-weight: 700;
+        }
+
+        .review-text {
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.95rem;
+            padding-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 120px;
+            }
+
+            header {
+                padding: 16px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 12px;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .hero {
+                padding: 28px;
+            }
+
+            .reviews-grid {
+                gap: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo"><span class="honza">Honza</span><span class="three-d">3D</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Domů</a></li>
+                <li><a href="index.html#products">Produkty</a></li>
+                <li><a href="index.html#services">Služby</a></li>
+                <li><a href="index.html#contact">Kontakt</a></li>
+                <li><a href="ourteam.html">Náš Team</a></li>
+                <li><a href="reviews.html">Recenze</a></li>
+            </ul>
+        </header>
+
+        <section class="hero">
+            <h1>Recenze</h1>
+            <p>Podívejte se, co říkají zákazníci o Honza3D. Po odeslání se recenze zobrazí hned na stránce a zároveň se automaticky pošle dál.</p>
+        </section>
+
+        <section class="review-form">
+            <h2>Napište recenzi</h2>
+            <form id="reviewForm">
+                <div class="form-row">
+                    <label for="reviewName">Jméno</label>
+                    <input type="text" id="reviewName" name="reviewName" placeholder="Vaše jméno" required>
+                </div>
+                <div class="form-row">
+                    <label for="reviewRating">Hodnocení</label>
+                    <select id="reviewRating" name="reviewRating" required>
+                        <option value="">-- Vyberte počet hvězdiček --</option>
+                        <option value="5">★★★★★</option>
+                        <option value="4">★★★★☆</option>
+                        <option value="3">★★★☆☆</option>
+                        <option value="2">★★☆☆☆</option>
+                        <option value="1">★☆☆☆☆</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="reviewText">Recenze</label>
+                    <textarea id="reviewText" name="reviewText" rows="5" placeholder="Napište svůj názor..." required></textarea>
+                </div>
+                <button type="submit">Odeslat recenzi</button>
+                <div class="success-message" id="reviewSuccess">Děkujeme! Vaše recenze byla odeslána k posouzení. Po schválení se objeví na webu.</div>
+            </form>
+        </section>
+
+        <section class="reviews-grid empty" id="reviewsGrid"></section>
+
+        <footer>
+            &copy; 2026 Honza3D. Všechna práva vyhrazena.
+        </footer>
+    </div>
+
+    <script>
+        const reviewForm = document.getElementById('reviewForm');
+        const reviewsGrid = document.getElementById('reviewsGrid');
+        const reviewSuccess = document.getElementById('reviewSuccess');
+        const apiUrl = 'https://6a46aa4ea268c8be2ce83b9a.mockapi.io/reviews';
+
+        async function loadReviews() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Nepodařilo se načíst recenze');
+                }
+                const reviews = await response.json();
+                renderReviews(reviews);
+            } catch (error) {
+                reviewsGrid.classList.remove('empty');
+                reviewsGrid.innerHTML = '<div class="review-card"><p class="review-text">Recenze nelze načíst. Zkuste stránku prosím znovu později.</p></div>';
+                console.error('Review load error:', error);
+            }
+        }
+
+        function renderReviews(reviews) {
+            if (!reviews.length) {
+                reviewsGrid.innerHTML = '';
+                reviewsGrid.classList.add('empty');
+                return;
+            }
+
+            reviewsGrid.classList.remove('empty');
+            reviewsGrid.innerHTML = reviews
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map(review => `
+                    <article class="review-card">
+                        <div class="review-meta">
+                            <div class="review-author">${review.name}</div>
+                            <div class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</div>
+                        </div>
+                        <p class="review-text">${review.text}</p>
+                    </article>
+                `).join('');
+        }
+
+        async function submitReview(review) {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(review)
+            });
+
+            if (!response.ok) {
+                throw new Error('Nepodařilo se uložit recenzi');
+            }
+
+            return true;
+        }
+
+        reviewForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('reviewName').value.trim();
+            const rating = parseInt(document.getElementById('reviewRating').value, 10);
+            const text = document.getElementById('reviewText').value.trim();
+
+            if (!name || !rating || !text) {
+                return;
+            }
+
+            const review = {
+                name,
+                rating,
+                text,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await submitReview(review);
+                reviewForm.reset();
+                reviewSuccess.innerText = 'Děkujeme! Vaše recenze byla úspěšně odeslána a zobrazí se pro ostatní uživatele.';
+                reviewSuccess.style.display = 'block';
+                setTimeout(() => {
+                    reviewSuccess.style.display = 'none';
+                }, 4000);
+            } catch (error) {
+                console.error('Review submit error:', error);
+                reviewSuccess.innerText = 'Odeslání recenze selhalo. Zkuste to prosím znovu.';
+                reviewSuccess.style.display = 'block';
+            }
+        });
+
+        loadReviews();
+    </script>
+</body>
+</html>
